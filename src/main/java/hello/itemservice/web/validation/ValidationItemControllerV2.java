@@ -46,11 +46,14 @@ public class ValidationItemControllerV2 {
     }
 
     /**
-     * [*주의*] BindingResult bindingResult 파라미터의 위치는 @ModelAttribute Item item 다음에 와야 한다.
+     * BindingResult란? 스프링이 제공하는 검증 오류를 보관하는 객체.
+     * BindingResult 가 없을 때 : 데이터 바인딩시 오류가 발생하면, 컨트롤러가 호출되지 않고, 곧바로 에러 페이지 이동.
+     * BindingResult 가 있을 때 : 타입 오류 등으로 바인딩이 실패하는 경우 스프링이 FieldError 생성해서 BindingResult 에 넣어준 다음, 컨트롤러를 정상 호출한다.
+     * BindingResult bindingResult 파라미터의 위치는 검증할 대상인, @ModelAttribute Item item 다음에 위치해야 한다.
+     * BindingResult 는 Model에 자동으로 포함된다.
      */
     @PostMapping("/add")
     public String addItemV1(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
-
 
         //검증 로직
         if (!StringUtils.hasText(item.getItemName())) {
@@ -96,7 +99,5 @@ public class ValidationItemControllerV2 {
         itemRepository.update(itemId, item);
         return "redirect:/validation/v2/items/{itemId}";
     }
-
-
 }
 
