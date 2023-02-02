@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -167,15 +168,20 @@ public class ValidationItemControllerV2 {
         log.info("objectName={}", bindingResult.getObjectName());
         log.info("target={}", bindingResult.getTarget());
 
+        /* ValidationUtils 를 통해, 아래 검증로직을 한 줄로 구현할 수 있다. 단, Empty, 공백 같은 단순한 기능만 제공 */
+        //ValidationUtils.rejectIfEmpty(bindingResult, "itemName", "required");
+
         //검증 로직
         if (!StringUtils.hasText(item.getItemName())) {
             bindingResult.rejectValue("itemName", "required");
+
             // 다음 4가지 오류 코드를 자동으로 생성
             //required.item.itemName
             //required.itemName
             //required.java.lang.String
             //required
         }
+
         if (item.getPrice() == null || item.getPrice() < 1000 || item.getPrice() > 1000000) {
             bindingResult.rejectValue("price", "range", new Object[]{1000, 1000000}, null);
         }
