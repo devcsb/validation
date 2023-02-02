@@ -165,6 +165,12 @@ public class ValidationItemControllerV2 {
     @PostMapping("/add")
     public String addItemV4(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
 
+        /* 바인딩 에러가 나면 다른 안내문구 반환 없이 이렇게 바로 return 하는 식으로도 많이 쓰인다.*/
+//        if (bindingResult.hasErrors()) {
+//            log.info("errors = {}", bindingResult);
+//            return "validation/v2/addForm";
+//        }
+
         log.info("objectName={}", bindingResult.getObjectName());
         log.info("target={}", bindingResult.getTarget());
 
