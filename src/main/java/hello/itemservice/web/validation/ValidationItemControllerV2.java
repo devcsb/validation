@@ -22,7 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ValidationItemControllerV2 {
 
-    private final ItemRepository itemRepository;
+    private final ItemRepository itemRepository; // 파라미터가 두 개인 생성자 하나를 RequiredArgsConstructor 가 생성해준다.
+    private final ItemValidator itemValidator;
+
 
     @GetMapping
     public String items(Model model) {
@@ -162,7 +164,7 @@ public class ValidationItemControllerV2 {
         return "redirect:/validation/v2/items/{itemId}";
     }
 
-    @PostMapping("/add")
+    //    @PostMapping("/add")
     public String addItemV4(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
 
         /* 바인딩 에러가 나면 다른 안내문구 반환 없이 이렇게 바로 return 하는 식으로도 많이 쓰인다.*/
@@ -218,6 +220,25 @@ public class ValidationItemControllerV2 {
         redirectAttributes.addAttribute("status", true);
         return "redirect:/validation/v2/items/{itemId}";
     }
+
+    @PostMapping("/add")
+    public String addItemV5(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+
+        itemValidator.validate(item, bindingResult);
+
+        //검증에 실패하면 다시 입력 폼으로
+        if (bindingResult.hasErrors()) {  // "에러가 없는 것이 아니면" => 부정의 부정이므로, 코드 가독성이 매우 떨어짐. 실무에선 반드시 다른 방식으로 풀어서 쓰도록 한다.
+            log.info("errors = {}", bindingResult);
+            return "validation/v2/addForm";
+        }
+
+        //성공 로직
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+        return "redirect:/validation/v2/items/{itemId}";
+    }
+
 
     @GetMapping("/{itemId}/edit")
     public String editForm(@PathVariable Long itemId, Model model) {
