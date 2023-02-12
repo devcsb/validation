@@ -80,6 +80,12 @@ public class ValidationItemControllerV3 {
         return "validation/v3/editForm";
     }
 
+
+    /**
+     * 등록과 수정에서 다른 Validation Rule을 적용이 필요할 떄, 아래 두 가지 방법을 통해 해결해야한다.
+     * 1. groups 기능 사용
+     * 2. Item을 직접 사용하지 않고, ItemSaveForm, ItemUpdateForm 같은 폼 전송 모델객체를 만들어 사용
+     */
     @PostMapping("/{itemId}/edit")
     public String edit(@PathVariable Long itemId, @Validated @ModelAttribute Item item, BindingResult bindingResult) {
 
@@ -97,8 +103,6 @@ public class ValidationItemControllerV3 {
             return "validation/v3/editForm";
 
         }
-
-
 
         itemRepository.update(itemId, item);
         return "redirect:/validation/v3/items/{itemId}";
