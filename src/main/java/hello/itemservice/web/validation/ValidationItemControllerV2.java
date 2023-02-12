@@ -78,7 +78,7 @@ public class ValidationItemControllerV2 {
         }
 
         //검증에 실패하면 다시 입력 폼으로
-        if (bindingResult.hasErrors()) {  // "에러가 없는 것이 아니면" => 부정의 부정이므로, 코드 가독성이 매우 떨어짐. 실무에선 반드시 다른 방식으로 풀어서 쓰도록 한다.
+        if (bindingResult.hasErrors()) {
             log.info("errors = {}", bindingResult);
             return "validation/v2/addForm";
         }
@@ -114,7 +114,7 @@ public class ValidationItemControllerV2 {
         }
 
         //검증에 실패하면 다시 입력 폼으로
-        if (bindingResult.hasErrors()) {  // "에러가 없는 것이 아니면" => 부정의 부정이므로, 코드 가독성이 매우 떨어짐. 실무에선 반드시 다른 방식으로 풀어서 쓰도록 한다.
+        if (bindingResult.hasErrors()) {
             log.info("errors = {}", bindingResult);
             return "validation/v2/addForm";
         }
@@ -152,7 +152,7 @@ public class ValidationItemControllerV2 {
         }
 
         //검증에 실패하면 다시 입력 폼으로
-        if (bindingResult.hasErrors()) {  // "에러가 없는 것이 아니면" => 부정의 부정이므로, 코드 가독성이 매우 떨어짐. 실무에선 반드시 다른 방식으로 풀어서 쓰도록 한다.
+        if (bindingResult.hasErrors()) {
             log.info("errors = {}", bindingResult);
             return "validation/v2/addForm";
         }
@@ -209,7 +209,7 @@ public class ValidationItemControllerV2 {
         }
 
         //검증에 실패하면 다시 입력 폼으로
-        if (bindingResult.hasErrors()) {  // "에러가 없는 것이 아니면" => 부정의 부정이므로, 코드 가독성이 매우 떨어짐. 실무에선 반드시 다른 방식으로 풀어서 쓰도록 한다.
+        if (bindingResult.hasErrors()) {
             log.info("errors = {}", bindingResult);
             return "validation/v2/addForm";
         }
@@ -227,7 +227,7 @@ public class ValidationItemControllerV2 {
         itemValidator.validate(item, bindingResult);
 
         //검증에 실패하면 다시 입력 폼으로
-        if (bindingResult.hasErrors()) {  // "에러가 없는 것이 아니면" => 부정의 부정이므로, 코드 가독성이 매우 떨어짐. 실무에선 반드시 다른 방식으로 풀어서 쓰도록 한다.
+        if (bindingResult.hasErrors()) {
             log.info("errors = {}", bindingResult);
             return "validation/v2/addForm";
         }

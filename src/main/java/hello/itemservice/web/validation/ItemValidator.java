@@ -6,6 +6,9 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+/**
+ * 검증 로직을 분리한 Validator. 빈 등록 후 Controller에서 의존성 주입받아 사용한다.
+ */
 @Component
 public class ItemValidator implements Validator {
 
