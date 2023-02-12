@@ -11,6 +11,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.ValidationUtils;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -25,6 +27,12 @@ public class ValidationItemControllerV2 {
     private final ItemRepository itemRepository; // 파라미터가 두 개인 생성자 하나를 RequiredArgsConstructor 가 생성해준다.
     private final ItemValidator itemValidator;
 
+    /* 컨트롤러에 요청이 들어올 때 마다 항상 databinder에 앞에서 만든 Custom Validator를 추가한다.
+    * WebDataBinder는 요청이 올 때 마다 항상 새로 만들어지는 Binder 임. */
+    @InitBinder // InitBinder => 해당 컨트롤러에만 영향을 준다. 글로벌 설정은 별도.
+    public void init(WebDataBinder dataBinder) {
+        dataBinder.addValidators(itemValidator);
+    }
 
     @GetMapping
     public String items(Model model) {
@@ -221,10 +229,33 @@ public class ValidationItemControllerV2 {
         return "redirect:/validation/v2/items/{itemId}";
     }
 
-    @PostMapping("/add")
+//    @PostMapping("/add")
     public String addItemV5(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
 
         itemValidator.validate(item, bindingResult);
+
+        //검증에 실패하면 다시 입력 폼으로
+        if (bindingResult.hasErrors()) {
+            log.info("errors = {}", bindingResult);
+            return "validation/v2/addForm";
+        }
+
+        //성공 로직
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+        return "redirect:/validation/v2/items/{itemId}";
+    }
+
+    /*
+    * 검증 대상 앞에 @Validated 를 추가한다.
+    * @Validated => 검증기를 실행해라는 어노테이션. WebDataBinder 에 등록된 검증기를 찾아서 실행한다.
+    * 이 때, 여러 검증기가 등록되어있다면 검증 대상 타입을 판별하는 Validator의 support() 메서드를 통해 실행 여부를 판별한다.
+    * @Valid는 자바 표준, @Validated는 스프링 전용이다. Validator로 검증하는 역할은 같으나, 약간의 차이가 있다.
+    * @Valid를 사용하려면, spring-boot-starter-validation 의존성을 추가해야함.
+     * */
+    @PostMapping("/add")
+    public String addItemV6(@Validated @ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
 
         //검증에 실패하면 다시 입력 폼으로
         if (bindingResult.hasErrors()) {
