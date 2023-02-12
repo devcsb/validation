@@ -16,17 +16,18 @@ import javax.validation.constraints.NotNull;
 //@ScriptAssert(lang="javascript", script = "_this.price * _this.quantity >= 10000", message = "최소 주문금액은 10000원 이상입니다.")
 public class Item {
 
+    @NotNull(groups = UpdateCheck.class) // 수정 시에만 검증
     private Long id;
 
-    @NotBlank(message = "공백은 허용하지 않습니다!") // 이렇게 메세지 정의할 수도 있고, properties 파일 바깥으로 빼낼 수도 있다.
+    @NotBlank(message = "공백은 허용하지 않습니다!", groups = {SaveCheck.class, UpdateCheck.class}) // 이렇게 메세지 정의할 수도 있고, properties 파일 바깥으로 빼낼 수도 있다.
     private String itemName;
 
-    @NotNull
-    @Range(min = 1000, max = 1000000)  // 하이버네이트 validator 구현체를 사용할 때만 제공되는 검증기능.
+    @NotNull(groups = {SaveCheck.class, UpdateCheck.class})
+    @Range(min = 1000, max = 1000000, groups = {SaveCheck.class, UpdateCheck.class})  // 하이버네이트 validator 구현체를 사용할 때만 제공되는 검증기능.
     private Integer price;
 
-    @NotNull
-    @Max(9999)
+    @NotNull(groups = {SaveCheck.class, UpdateCheck.class})
+    @Max(value = 9999, groups = {SaveCheck.class}) // 등록 시에만 검증
     private Integer quantity;
 
     public Item() {
